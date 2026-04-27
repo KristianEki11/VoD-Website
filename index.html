@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineStream - Platform VoD Premium</title>
+    <!-- Google Fonts: Montserrat untuk judul dramatis, Roboto untuk teks body -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigasi -->
+    <nav id="navbar">
+        <a href="#" class="logo">Redline TV</a>
+        <ul class="nav-links" id="genre-filters">
+            <li><a class="active" data-genre="Semua">Semua</a></li>
+            <li><a data-genre="Aksi">Aksi</a></li>
+            <li><a data-genre="Drama">Drama</a></li>
+            <li><a data-genre="Dokumenter">Dokumenter</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari film...">
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Last Frontier</h1>
+            <p class="hero-desc">Saksikan pertempuran epik di perbatasan terakhir umat manusia. Sebuah mahakarya
+                sinematik yang akan membuat Anda menahan napas dari awal hingga akhir.</p>
+            <button class="btn btn-primary"
+                onclick="openModal('http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')">Tonton
+                Sekarang</button>
+        </div>
+    </header>
+
+    <!-- Konten Utama: Daftar Video -->
+    <main class="content-section">
+        <h2 class="section-title" id="section-title">Film Pilihan</h2>
+        <div class="video-grid" id="videoGrid">
+            <!-- Kartu Video akan di-render di sini oleh JavaScript -->
+        </div>
+        <div class="no-results" id="noResults">
+            Maaf, film tidak ditemukan.
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 CineStream. Platform VoD Premium by Antigravity.</p>
+    </footer>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="video-container" id="playerContainer">
+                <!-- Iframe Youtube / Video Player -->
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
