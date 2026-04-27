@@ -98,7 +98,7 @@ nav.scrolled {
 /* Hero Section Styling */
 .hero {
     height: 80vh;
-    background: linear-gradient(to top, var(--bg-color) 0%, rgba(0, 0, 0, 0.2) 100%), url('assets/poster_last_frontier.png') no-repeat center center/cover;
+    background: linear-gradient(to top, var(--bg-color) 0%, rgba(0, 0, 0, 0.2) 100%), url('..assets/poster_last_frontier.png') no-repeat center center/cover;
     display: flex;
     align-items: center;
     padding: 0 4%;
