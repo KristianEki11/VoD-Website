@@ -10,6 +10,11 @@
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/video.js@8/dist/video-js.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@videojs/http-streaming@3/dist/videojs-http-streaming.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4/dist/videojs-contrib-quality-levels.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@2/dist/videojs-hls-quality-selector.min.js"></script>
 </head>
 
 <body>
@@ -31,11 +36,9 @@
     <!-- Hero Section -->
     <header class="hero">
         <div class="hero-content">
-            <h1 class="hero-title">Last Frontier</h1>
-            <p class="hero-desc">Saksikan pertempuran epik di perbatasan terakhir umat manusia. Sebuah mahakarya
-                sinematik yang akan membuat Anda menahan napas dari awal hingga akhir.</p>
-            <button class="btn btn-primary"
-                onclick="openModal('http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')">Tonton
+            <h1 class="hero-title">ADV Adin</h1>
+            <p class="hero-desc">Saksikan ADV Adin Awikwok sampai akhir</p>
+            <button class="btn btn-primary" onclick="openModal('videos/adv-adin/index.m3u8')">Tonton
                 Sekarang</button>
         </div>
     </header>
@@ -61,7 +64,7 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <div class="video-container" id="playerContainer">
-                <!-- Iframe Youtube / Video Player -->
+                <video id="videoPlayer" class="video-js vjs-big-play-centered" controls preload="auto" style="width:100%;height:100%"></video>
             </div>
         </div>
     </div>

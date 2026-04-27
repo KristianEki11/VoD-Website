@@ -366,3 +366,11 @@ footer {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 }
+
+/* Video.js Kustomisasi Tema */
+.video-js .vjs-control-bar { background: rgba(0,0,0,0.85); }
+.video-js .vjs-play-progress { background: #e50914; }
+.video-js .vjs-volume-level { background: #e50914; }
+.video-js .vjs-selected { color: #e50914 !important; }
+.video-js .vjs-big-play-button { border-color: #e50914; background: rgba(229,9,20,0.7); border-radius: 50%; width: 70px; height: 70px; line-height: 70px; margin-left: -35px; margin-top: -35px; }
+.video-js:hover .vjs-big-play-button { background: #e50914; }

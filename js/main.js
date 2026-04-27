@@ -145,17 +145,29 @@ filterLinks.forEach(link => {
 });
 
 // 5. Logika Modal Player
+let player = null;
 function openModal(url) {
-    // Memasukkan HTML5 Video Player
-    playerContainer.innerHTML = `<video src="${url}" controls autoplay style="width: 100%; height: 100%; outline: none;"></video>`;
     modal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Mencegah scrolling latar
+    document.body.style.overflow = 'hidden';
+    if (!player) {
+        player = videojs('videoPlayer', {
+            responsive: true,
+            playbackRates: [0.5, 1, 1.25, 1.5, 2],
+            controlBar: {
+                children: ['playToggle', 'volumePanel', 'currentTimeDisplay', 'timeDivider', 'durationDisplay', 'progressControl', 'playbackRateMenuButton', 'qualitySelector', 'fullscreenToggle']
+            }
+        });
+        player.hlsQualitySelector({ displayCurrentQuality: true });
+    }
+    const isHls = url.includes('.m3u8');
+    player.src({ src: url, type: isHls ? 'application/x-mpegURL' : 'video/mp4' });
+    player.play();
 }
 
 function closeModal() {
     modal.classList.remove('active');
-    playerContainer.innerHTML = ''; // Menghentikan video saat ditutup
-    document.body.style.overflow = 'auto'; // Mengembalikan scrolling
+    document.body.style.overflow = 'auto';
+    if (player) { player.pause(); player.src(''); }
 }
 
 // Menutup modal jika klik di luar konten
