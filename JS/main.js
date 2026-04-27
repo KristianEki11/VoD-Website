@@ -1,92 +1,92 @@
-        // 1. Data Dummy Video (Minimal 8 video)
-    const videos = [
+// 1. Data Dummy Video (Minimal 8 video)
+const videos = [
     {
         id: 1,
-    title: "Shadow Strike",
-    genre: "Aksi",
-    duration: "2j 15m",
-    thumbnail: "assets/poster_shadow_strike.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" // Menggunakan YouTube embed dummy
-            },
+        title: "Shadow Strike",
+        genre: "Aksi",
+        duration: "2j 15m",
+        thumbnail: "./assets/poster_shadow_strike.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" // Menggunakan YouTube embed dummy
+    },
     {
         id: 2,
-    title: "Whispers of Rain",
-    genre: "Drama",
-    duration: "1j 50m",
-    thumbnail: "assets/poster_whispers_rain.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
+        title: "Whispers of Rain",
+        genre: "Drama",
+        duration: "1j 50m",
+        thumbnail: "./assets/poster_whispers_rain.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    },
     {
         id: 3,
-    title: "Deep Ocean Secrets",
-    genre: "Dokumenter",
-    duration: "1j 30m",
-    thumbnail: "assets/poster_deep_ocean.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
+        title: "Deep Ocean Secrets",
+        genre: "Dokumenter",
+        duration: "1j 30m",
+        thumbnail: "./assets/poster_deep_ocean.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    },
     {
         id: 4,
-    title: "Neon City Breakout",
-    genre: "Aksi",
-    duration: "2j 05m",
-    thumbnail: "assets/poster_neon_city.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
+        title: "Neon City Breakout",
+        genre: "Aksi",
+        duration: "2j 05m",
+        thumbnail: "./assets/poster_neon_city.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    },
     {
         id: 5,
-    title: "Last Frontier",
-    genre: "Aksi",
-    duration: "2j 30m",
-    thumbnail: "assets/poster_last_frontier.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
+        title: "Last Frontier",
+        genre: "Aksi",
+        duration: "2j 30m",
+        thumbnail: "./assets/poster_last_frontier.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    },
     {
         id: 6,
-    title: "Eternal Flame",
-    genre: "Aksi",
-    duration: "2j 10m",
-    thumbnail: "assets/poster_eternal_flame.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
+        title: "Eternal Flame",
+        genre: "Aksi",
+        duration: "2j 10m",
+        thumbnail: "./assets/poster_eternal_flame.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    },
     {
         id: 7,
-    title: "Broken Strings",
-    genre: "Drama",
-    duration: "1j 55m",
-    thumbnail: "assets/poster_broken_strings.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
+        title: "Broken Strings",
+        genre: "Drama",
+        duration: "1j 55m",
+        thumbnail: "./assets/poster_broken_strings.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    },
     {
         id: 8,
-    title: "Frozen Earth",
-    genre: "Dokumenter",
-    duration: "1j 40m",
-    thumbnail: "assets/poster_frozen_earth.png",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            }
-    ];
+        title: "Frozen Earth",
+        genre: "Dokumenter",
+        duration: "1j 40m",
+        thumbnail: "./assets/poster_frozen_earth.png",
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    }
+];
 
-    // Referensi Elemen DOM
-    const videoGrid = document.getElementById('videoGrid');
-    const searchInput = document.getElementById('searchInput');
-    const filterLinks = document.querySelectorAll('#genre-filters a');
-    const noResults = document.getElementById('noResults');
-    const modal = document.getElementById('videoModal');
-    const playerContainer = document.getElementById('playerContainer');
-    const navbar = document.getElementById('navbar');
+// Referensi Elemen DOM
+const videoGrid = document.getElementById('videoGrid');
+const searchInput = document.getElementById('searchInput');
+const filterLinks = document.querySelectorAll('#genre-filters a');
+const noResults = document.getElementById('noResults');
+const modal = document.getElementById('videoModal');
+const playerContainer = document.getElementById('playerContainer');
+const navbar = document.getElementById('navbar');
 
-    // Status Filter Aktif
-    let currentGenre = "Semua";
-    let searchQuery = "";
+// Status Filter Aktif
+let currentGenre = "Semua";
+let searchQuery = "";
 
-    // 2. Fungsi Render Kartu Video
-    function renderVideos() {
-            // Filter data berdasarkan genre dan pencarian
-            const filteredVideos = videos.filter(video => {
-                const matchGenre = currentGenre === "Semua" || video.genre === currentGenre;
-    const matchSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchGenre && matchSearch;
-            });
+// 2. Fungsi Render Kartu Video
+function renderVideos() {
+    // Filter data berdasarkan genre dan pencarian
+    const filteredVideos = videos.filter(video => {
+        const matchGenre = currentGenre === "Semua" || video.genre === currentGenre;
+        const matchSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchGenre && matchSearch;
+    });
 
     // Kosongkan grid
     videoGrid.innerHTML = '';
@@ -94,16 +94,16 @@
     // Tampilkan pesan jika kosong
     if (filteredVideos.length === 0) {
         noResults.style.display = 'block';
-            } else {
+    } else {
         noResults.style.display = 'none';
 
-                // Buat elemen HTML untuk setiap video
-                filteredVideos.forEach(video => {
-                    const card = document.createElement('div');
-    card.className = 'video-card';
-                    card.onclick = () => openModal(video.videoUrl); // Event klik membuka modal
+        // Buat elemen HTML untuk setiap video
+        filteredVideos.forEach(video => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.onclick = () => openModal(video.videoUrl); // Event klik membuka modal
 
-    card.innerHTML = `
+            card.innerHTML = `
     <div class="thumbnail-container">
         <img src="${video.thumbnail}" alt="${video.title}" class="thumbnail" loading="lazy">
             <div class="play-overlay">
@@ -118,61 +118,61 @@
         </div>
     </div>
     `;
-    videoGrid.appendChild(card);
-                });
-            }
-        }
-
-        // 3. Event Listener untuk Pencarian (Real-time)
-        searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value;
-    renderVideos();
+            videoGrid.appendChild(card);
         });
+    }
+}
 
-        // 4. Event Listener untuk Filter Genre
-        filterLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Update styling active
-            filterLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-
-            // Update genre dan render ulang
-            currentGenre = link.getAttribute('data-genre');
-            document.getElementById('section-title').textContent = currentGenre === "Semua" ? "Film Pilihan" : `Genre: ${currentGenre}`;
+// 3. Event Listener untuk Pencarian (Real-time)
+searchInput.addEventListener('input', (e) => {
+    searchQuery = e.target.value;
     renderVideos();
-            });
-        });
+});
 
-    // 5. Logika Modal Player
-    function openModal(url) {
-        // Memasukkan HTML5 Video Player
-        playerContainer.innerHTML = `<video src="${url}" controls autoplay style="width: 100%; height: 100%; outline: none;"></video>`;
+// 4. Event Listener untuk Filter Genre
+filterLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Update styling active
+        filterLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+
+        // Update genre dan render ulang
+        currentGenre = link.getAttribute('data-genre');
+        document.getElementById('section-title').textContent = currentGenre === "Semua" ? "Film Pilihan" : `Genre: ${currentGenre}`;
+        renderVideos();
+    });
+});
+
+// 5. Logika Modal Player
+function openModal(url) {
+    // Memasukkan HTML5 Video Player
+    playerContainer.innerHTML = `<video src="${url}" controls autoplay style="width: 100%; height: 100%; outline: none;"></video>`;
     modal.classList.add('active');
     document.body.style.overflow = 'hidden'; // Mencegah scrolling latar
-        }
+}
 
-    function closeModal() {
-        modal.classList.remove('active');
+function closeModal() {
+    modal.classList.remove('active');
     playerContainer.innerHTML = ''; // Menghentikan video saat ditutup
     document.body.style.overflow = 'auto'; // Mengembalikan scrolling
-        }
+}
 
-        // Menutup modal jika klik di luar konten
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
+// Menutup modal jika klik di luar konten
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
         closeModal();
-            }
-        });
+    }
+});
 
-        // 6. Efek Scroll Navbar
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
+// 6. Efek Scroll Navbar
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
-            } else {
+    } else {
         navbar.classList.remove('scrolled');
-            }
-        });
+    }
+});
 
-    // Inisialisasi awal render video
-    renderVideos();
+// Inisialisasi awal render video
+renderVideos();
