@@ -2,16 +2,16 @@
 #EXT-X-VERSION:3
 
 #EXT-X-STREAM-INF:BANDWIDTH=300000,RESOLUTION=256x144
-https://github.com/KristianEki11/VoD-Website/releases/download/v1.0-videos/lambo-wh/144p.m3u8
+144p.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360
-https://github.com/KristianEki11/VoD-Website/releases/download/v1.0-videos/lambo-wh/360p.m3u8
+360p.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=1400000,RESOLUTION=854x480
-https://github.com/KristianEki11/VoD-Website/releases/download/v1.0-videos/lambo-wh/480p.m3u8
+480p.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=2800000,RESOLUTION=1280x720
-https://github.com/KristianEki11/VoD-Website/releases/download/v1.0-videos/lambo-wh/720p.m3u8
+720p.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=5000000,RESOLUTION=1920x1080
-https://github.com/KristianEki11/VoD-Website/releases/download/v1.0-videos/lambo-wh/1080p.m3u8
+1080p.m3u8
