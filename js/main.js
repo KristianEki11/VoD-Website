@@ -9,7 +9,7 @@ const videos = [
         genre: "Dokumenter",
         duration: "0j 15m",
         thumbnail: "assets/poster_shadow_strike.png",
-        videoUrl: `${BASE}/adv-adin_master.m3u8`
+        videoUrl: `videos/adv-adin/adv-adin_master.m3u8`
     },
     {
         id: 2,
@@ -17,7 +17,7 @@ const videos = [
         genre: "Aksi",
         duration: "0j 05m",
         thumbnail: "assets/poster_neon_city.png",
-        videoUrl: `${BASE}/lambo-wh_master.m3u8`
+        videoUrl: `videos/lambo_wh/lambo-wh_master.m3u8`
     },
     {
         id: 3,
@@ -25,7 +25,7 @@ const videos = [
         genre: "Dokumenter",
         duration: "0j 05m",
         thumbnail: "assets/poster_deep_ocean.png",
-        videoUrl: `${BASE}/main-accord_master.m3u8`
+        videoUrl: `videos/main_accord/main-accord_master.m3u8`
     },
     {
         id: 4,
@@ -33,7 +33,7 @@ const videos = [
         genre: "Drama",
         duration: "0j 03m",
         thumbnail: "assets/poster_whispers_rain.png",
-        videoUrl: `${BASE}/motion-kiko_master.m3u8`
+        videoUrl: `videos/motion_kiko/motion-kiko_master.m3u8`
     },
     {
         id: 5,
@@ -41,7 +41,7 @@ const videos = [
         genre: "Aksi",
         duration: "0j 08m",
         thumbnail: "assets/poster_last_frontier.png",
-        videoUrl: `${BASE}/rolling-night_master.m3u8`
+        videoUrl: `videos/rolling_night/rolling-night_master.m3u8`
     }
 ];
 
