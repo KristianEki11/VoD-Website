@@ -144,30 +144,23 @@ filterLinks.forEach(link => {
     });
 });
 
-// 5. Logika Modal Player
-let player = null;
+// 5. Logika Modal Player - Video.js v10 Web Components
 function openModal(url) {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    if (!player) {
-        player = videojs('videoPlayer', {
-            responsive: true,
-            playbackRates: [0.5, 1, 1.25, 1.5, 2],
-            controlBar: {
-                children: ['playToggle', 'volumePanel', 'currentTimeDisplay', 'timeDivider', 'durationDisplay', 'progressControl', 'playbackRateMenuButton', 'qualitySelector', 'fullscreenToggle']
-            }
-        });
-        player.hlsQualitySelector({ displayCurrentQuality: true });
-    }
-    const isHls = url.includes('.m3u8');
-    player.src({ src: url, type: isHls ? 'application/x-mpegURL' : 'video/mp4' });
-    player.play();
+
+    const hlsVideo = document.getElementById('hlsVideo');
+    hlsVideo.src = url;
+    hlsVideo.play();
 }
 
 function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
-    if (player) { player.pause(); player.src(''); }
+
+    const hlsVideo = document.getElementById('hlsVideo');
+    hlsVideo.pause();
+    hlsVideo.src = '';
 }
 
 // Menutup modal jika klik di luar konten

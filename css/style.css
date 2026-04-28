@@ -367,10 +367,27 @@ footer {
     }
 }
 
-/* Video.js Kustomisasi Tema */
-.video-js .vjs-control-bar { background: rgba(0,0,0,0.85); }
-.video-js .vjs-play-progress { background: #e50914; }
-.video-js .vjs-volume-level { background: #e50914; }
-.video-js .vjs-selected { color: #e50914 !important; }
-.video-js .vjs-big-play-button { border-color: #e50914; background: rgba(229,9,20,0.7); border-radius: 50%; width: 70px; height: 70px; line-height: 70px; margin-left: -35px; margin-top: -35px; }
-.video-js:hover .vjs-big-play-button { background: #e50914; }
+/* Video.js v10 - Styling Web Components */
+video-player {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+video-skin {
+    --media-primary-color: #e50914;
+    --media-secondary-color: #ffffff;
+    --media-control-background: rgba(0, 0, 0, 0.85);
+    --media-range-track-color: rgba(255, 255, 255, 0.3);
+    --media-range-thumb-color: #e50914;
+    --media-time-range-buffered-color: rgba(255, 255, 255, 0.4);
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+hls-video {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
