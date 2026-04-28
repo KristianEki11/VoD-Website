@@ -151,7 +151,14 @@ function openModal(url) {
 
     const hlsVideo = document.getElementById('hlsVideo');
     hlsVideo.src = url;
-    hlsVideo.play();
+
+    // Tunggu Web Component selesai di-define baru play
+    customElements.whenDefined('hls-video').then(() => {
+        hlsVideo.play().catch(() => {
+            const innerVideo = hlsVideo.querySelector('video') || hlsVideo;
+            if (innerVideo && innerVideo.play) innerVideo.play();
+        });
+    });
 }
 
 function closeModal() {
@@ -159,8 +166,10 @@ function closeModal() {
     document.body.style.overflow = 'auto';
 
     const hlsVideo = document.getElementById('hlsVideo');
-    hlsVideo.pause();
-    hlsVideo.src = '';
+    customElements.whenDefined('hls-video').then(() => {
+        hlsVideo.pause();
+        hlsVideo.src = '';
+    });
 }
 
 // Menutup modal jika klik di luar konten
