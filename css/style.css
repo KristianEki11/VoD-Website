@@ -319,13 +319,14 @@ nav.scrolled {
 
 .video-container {
     position: relative;
-    padding-bottom: 56.25%;
-    /* Rasio 16:9 */
-    height: 0;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    background: #000;
 }
 
-.video-container iframe,
-.video-container video {
+.video-container video,
+.video-container .plyr {
     position: absolute;
     top: 0;
     left: 0;

@@ -148,6 +148,16 @@ filterLinks.forEach(link => {
 let plyrInstance = null;
 let hlsInstance = null;
 
+// Konfigurasi Plyr dengan iconUrl eksplisit agar sprite tidak gagal load
+const plyrConfig = (extraSettings = {}) => ({
+    iconUrl: 'https://cdn.plyr.io/3.7.8/plyr.svg',
+    blankVideo: 'https://cdn.plyr.io/static/blank.mp4',
+    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+    settings: ['speed'],
+    speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+    ...extraSettings
+});
+
 function openModal(url) {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -163,57 +173,35 @@ function openModal(url) {
         hlsInstance.loadSource(url);
         hlsInstance.attachMedia(video);
 
-        // Inisialisasi Plyr setelah manifest HLS ter-load
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-            // Buat daftar kualitas dari HLS levels
-            const qualityOptions = data.levels.map((level, i) => ({
-                id: i,
-                label: level.height ? `${level.height}p` : `Kualitas ${i + 1}`,
-            }));
+            const levels = data.levels;
+            const qualityOptions = [-1, ...levels.map((_, i) => i)];
+            const qualityLabels = { '-1': 'Auto' };
+            levels.forEach((level, i) => {
+                qualityLabels[i] = level.height ? `${level.height}p` : `Level ${i + 1}`;
+            });
 
-            plyrInstance = new Plyr(video, {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+            plyrInstance = new Plyr(video, plyrConfig({
                 settings: ['quality', 'speed'],
-                speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
                 quality: {
-                    default: -1, // Auto
-                    options: [-1, ...data.levels.map((_, i) => i)],
+                    default: -1,
+                    options: qualityOptions,
                     forced: true,
-                    onChange: (q) => {
-                        if (hlsInstance) hlsInstance.currentLevel = q;
-                    }
+                    onChange: (q) => { if (hlsInstance) hlsInstance.currentLevel = q; }
                 },
-                i18n: {
-                    qualityLabel: { '-1': 'Auto' }
-                }
-            });
-
-            // Tambahkan label resolusi ke opsi kualitas
-            data.levels.forEach((level, i) => {
-                plyrInstance.elements.settings && null; // trigger rebuild
-                Plyr.i18n = { qualityLabel: { [i]: level.height ? `${level.height}p` : `Level ${i}` } };
-            });
+                i18n: { qualityLabel: qualityLabels }
+            }));
 
             plyrInstance.play();
         });
 
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // Safari — HLS native
         video.src = url;
-        plyrInstance = new Plyr(video, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
-            settings: ['speed'],
-            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
-        });
+        plyrInstance = new Plyr(video, plyrConfig());
         plyrInstance.play();
     } else {
-        // MP4 biasa
         video.src = url;
-        plyrInstance = new Plyr(video, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
-            settings: ['speed'],
-            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
-        });
+        plyrInstance = new Plyr(video, plyrConfig());
         plyrInstance.play();
     }
 }
