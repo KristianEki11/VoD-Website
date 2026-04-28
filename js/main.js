@@ -34,11 +34,11 @@ const videos = [
     },
     {
         id: 5,
-        title: "ADV Adin",
+        title: "Last Frontier",
         genre: "Aksi",
         duration: "2j 30m",
         thumbnail: "/VoD-Website/assets/poster_last_frontier.png",
-        videoUrl: "videos/adv-adin/index.m3u8"
+        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
         id: 6,
@@ -144,52 +144,85 @@ filterLinks.forEach(link => {
     });
 });
 
-// 5. Logika Modal Player - HLS.js native
+// 5. Logika Modal Player — Plyr + HLS.js (support quality selector)
+let plyrInstance = null;
 let hlsInstance = null;
 
 function openModal(url) {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 
+    // Destroy instance sebelumnya
+    if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+    if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
+
     const video = document.getElementById('videoPlayer');
 
-    // Hapus instance HLS sebelumnya jika ada
-    if (hlsInstance) {
-        hlsInstance.destroy();
-        hlsInstance = null;
-    }
-
     if (url.includes('.m3u8') && Hls.isSupported()) {
-        // Gunakan HLS.js untuk browser yang tidak support HLS native (Chrome, Firefox)
         hlsInstance = new Hls();
         hlsInstance.loadSource(url);
         hlsInstance.attachMedia(video);
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-            video.play();
+
+        // Inisialisasi Plyr setelah manifest HLS ter-load
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+            // Buat daftar kualitas dari HLS levels
+            const qualityOptions = data.levels.map((level, i) => ({
+                id: i,
+                label: level.height ? `${level.height}p` : `Kualitas ${i + 1}`,
+            }));
+
+            plyrInstance = new Plyr(video, {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+                settings: ['quality', 'speed'],
+                speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+                quality: {
+                    default: -1, // Auto
+                    options: [-1, ...data.levels.map((_, i) => i)],
+                    forced: true,
+                    onChange: (q) => {
+                        if (hlsInstance) hlsInstance.currentLevel = q;
+                    }
+                },
+                i18n: {
+                    qualityLabel: { '-1': 'Auto' }
+                }
+            });
+
+            // Tambahkan label resolusi ke opsi kualitas
+            data.levels.forEach((level, i) => {
+                plyrInstance.elements.settings && null; // trigger rebuild
+                Plyr.i18n = { qualityLabel: { [i]: level.height ? `${level.height}p` : `Level ${i}` } };
+            });
+
+            plyrInstance.play();
         });
+
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // Safari sudah support HLS native
+        // Safari — HLS native
         video.src = url;
-        video.play();
+        plyrInstance = new Plyr(video, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+            settings: ['speed'],
+            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
+        });
+        plyrInstance.play();
     } else {
         // MP4 biasa
         video.src = url;
-        video.play();
+        plyrInstance = new Plyr(video, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+            settings: ['speed'],
+            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] }
+        });
+        plyrInstance.play();
     }
 }
 
 function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
-
-    const video = document.getElementById('videoPlayer');
-    video.pause();
-
-    if (hlsInstance) {
-        hlsInstance.destroy();
-        hlsInstance = null;
-    }
-    video.src = '';
+    if (plyrInstance) { plyrInstance.pause(); }
+    if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
 }
 
 // Menutup modal jika klik di luar konten

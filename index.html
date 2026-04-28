@@ -10,7 +10,9 @@
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <!-- HLS.js: library ringan untuk streaming HLS langsung di browser -->
+    <!-- Plyr: video player premium + HLS.js untuk streaming -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
 
 </head>
@@ -62,8 +64,7 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <div class="video-container" id="playerContainer">
-                <video id="videoPlayer" controls playsinline
-                    style="width:100%;height:100%;background:#000;outline:none;"></video>
+                <video id="videoPlayer" playsinline controls></video>
             </div>
         </div>
     </div>
