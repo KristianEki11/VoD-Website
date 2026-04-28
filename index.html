@@ -10,8 +10,8 @@
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <!-- Video.js v10 - Web Components API -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/html/+esm"></script>
+    <!-- HLS.js: library ringan untuk streaming HLS langsung di browser -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
 
 </head>
 
@@ -54,7 +54,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 RedlineTV. Platform VoD Premium by Kristian EKi.</p>
+        <p>&copy; 2026 RedlineTV. Platform VoD Premium by Krizzeki.</p>
     </footer>
 
     <!-- Video Modal -->
@@ -62,11 +62,8 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <div class="video-container" id="playerContainer">
-                <video-player id="videoPlayer">
-                    <video-skin>
-                        <hls-video id="hlsVideo" playsinline controls></hls-video>
-                    </video-skin>
-                </video-player>
+                <video id="videoPlayer" controls playsinline
+                    style="width:100%;height:100%;background:#000;outline:none;"></video>
             </div>
         </div>
     </div>

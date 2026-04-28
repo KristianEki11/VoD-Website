@@ -34,11 +34,11 @@ const videos = [
     },
     {
         id: 5,
-        title: "Last Frontier",
+        title: "ADV Adin",
         genre: "Aksi",
         duration: "2j 30m",
         thumbnail: "/VoD-Website/assets/poster_last_frontier.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        videoUrl: "videos/adv-adin/index.m3u8"
     },
     {
         id: 6,
@@ -144,32 +144,52 @@ filterLinks.forEach(link => {
     });
 });
 
-// 5. Logika Modal Player - Video.js v10 Web Components
+// 5. Logika Modal Player - HLS.js native
+let hlsInstance = null;
+
 function openModal(url) {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    const hlsVideo = document.getElementById('hlsVideo');
-    hlsVideo.src = url;
+    const video = document.getElementById('videoPlayer');
 
-    // Tunggu Web Component selesai di-define baru play
-    customElements.whenDefined('hls-video').then(() => {
-        hlsVideo.play().catch(() => {
-            const innerVideo = hlsVideo.querySelector('video') || hlsVideo;
-            if (innerVideo && innerVideo.play) innerVideo.play();
+    // Hapus instance HLS sebelumnya jika ada
+    if (hlsInstance) {
+        hlsInstance.destroy();
+        hlsInstance = null;
+    }
+
+    if (url.includes('.m3u8') && Hls.isSupported()) {
+        // Gunakan HLS.js untuk browser yang tidak support HLS native (Chrome, Firefox)
+        hlsInstance = new Hls();
+        hlsInstance.loadSource(url);
+        hlsInstance.attachMedia(video);
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+            video.play();
         });
-    });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Safari sudah support HLS native
+        video.src = url;
+        video.play();
+    } else {
+        // MP4 biasa
+        video.src = url;
+        video.play();
+    }
 }
 
 function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
 
-    const hlsVideo = document.getElementById('hlsVideo');
-    customElements.whenDefined('hls-video').then(() => {
-        hlsVideo.pause();
-        hlsVideo.src = '';
-    });
+    const video = document.getElementById('videoPlayer');
+    video.pause();
+
+    if (hlsInstance) {
+        hlsInstance.destroy();
+        hlsInstance = null;
+    }
+    video.src = '';
 }
 
 // Menutup modal jika klik di luar konten
