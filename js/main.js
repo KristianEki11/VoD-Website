@@ -5,7 +5,7 @@ const videos = [
         title: "Shadow Strike",
         genre: "Aksi",
         duration: "2j 15m",
-        thumbnail: "/VoD-Website/assets/poster_shadow_strike.png",
+        thumbnail: "assets/poster_shadow_strike.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" // Menggunakan YouTube embed dummy
     },
     {
@@ -13,7 +13,7 @@ const videos = [
         title: "Whispers of Rain",
         genre: "Drama",
         duration: "1j 50m",
-        thumbnail: "/VoD-Website/assets/poster_whispers_rain.png",
+        thumbnail: "assets/poster_whispers_rain.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
@@ -21,7 +21,7 @@ const videos = [
         title: "Deep Ocean Secrets",
         genre: "Dokumenter",
         duration: "1j 30m",
-        thumbnail: "/VoD-Website/assets/poster_deep_ocean.png",
+        thumbnail: "assets/poster_deep_ocean.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
@@ -29,7 +29,7 @@ const videos = [
         title: "Neon City Breakout",
         genre: "Aksi",
         duration: "2j 05m",
-        thumbnail: "/VoD-Website/assets/poster_neon_city.png",
+        thumbnail: "assets/poster_neon_city.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
@@ -37,7 +37,7 @@ const videos = [
         title: "Last Frontier",
         genre: "Aksi",
         duration: "2j 30m",
-        thumbnail: "/VoD-Website/assets/poster_last_frontier.png",
+        thumbnail: "assets/poster_last_frontier.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
@@ -45,7 +45,7 @@ const videos = [
         title: "Eternal Flame",
         genre: "Aksi",
         duration: "2j 10m",
-        thumbnail: "/VoD-Website/assets/poster_eternal_flame.png",
+        thumbnail: "assets/poster_eternal_flame.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
@@ -53,7 +53,7 @@ const videos = [
         title: "Broken Strings",
         genre: "Drama",
         duration: "1j 55m",
-        thumbnail: "/VoD-Website/assets/poster_broken_strings.png",
+        thumbnail: "assets/poster_broken_strings.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
@@ -61,7 +61,7 @@ const videos = [
         title: "Frozen Earth",
         genre: "Dokumenter",
         duration: "1j 40m",
-        thumbnail: "/VoD-Website/assets/poster_frozen_earth.png",
+        thumbnail: "assets/poster_frozen_earth.png",
         videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
 ];
