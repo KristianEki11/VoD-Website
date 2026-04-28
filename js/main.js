@@ -1,68 +1,47 @@
-// 1. Data Dummy Video (Minimal 8 video)
+// 1. Data Video — URL dari GitHub Releases (branch: feature/releases-storage)
+// Base URL GitHub Releases
+const BASE = "https://github.com/KristianEki11/VoD-Website/releases/download/v1.0-videos";
+
 const videos = [
     {
         id: 1,
-        title: "Shadow Strike",
-        genre: "Aksi",
-        duration: "2j 15m",
+        title: "ADV Adin",
+        genre: "Dokumenter",
+        duration: "0j 15m",
         thumbnail: "assets/poster_shadow_strike.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" // Menggunakan YouTube embed dummy
+        videoUrl: `${BASE}/adv-adin/master.m3u8`
     },
     {
         id: 2,
-        title: "Whispers of Rain",
-        genre: "Drama",
-        duration: "1j 50m",
-        thumbnail: "assets/poster_whispers_rain.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        title: "Lambo WH",
+        genre: "Aksi",
+        duration: "0j 05m",
+        thumbnail: "assets/poster_neon_city.png",
+        videoUrl: `${BASE}/lambo-wh/master.m3u8`
     },
     {
         id: 3,
-        title: "Deep Ocean Secrets",
+        title: "Main Accord",
         genre: "Dokumenter",
-        duration: "1j 30m",
+        duration: "0j 05m",
         thumbnail: "assets/poster_deep_ocean.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        videoUrl: `${BASE}/main-accord/master.m3u8`
     },
     {
         id: 4,
-        title: "Neon City Breakout",
-        genre: "Aksi",
-        duration: "2j 05m",
-        thumbnail: "assets/poster_neon_city.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        title: "Motion Kiko",
+        genre: "Drama",
+        duration: "0j 03m",
+        thumbnail: "assets/poster_whispers_rain.png",
+        videoUrl: `${BASE}/motion-kiko/master.m3u8`
     },
     {
         id: 5,
-        title: "Last Frontier",
+        title: "Rolling Night",
         genre: "Aksi",
-        duration: "2j 30m",
+        duration: "0j 08m",
         thumbnail: "assets/poster_last_frontier.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-    },
-    {
-        id: 6,
-        title: "Eternal Flame",
-        genre: "Aksi",
-        duration: "2j 10m",
-        thumbnail: "assets/poster_eternal_flame.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-    },
-    {
-        id: 7,
-        title: "Broken Strings",
-        genre: "Drama",
-        duration: "1j 55m",
-        thumbnail: "assets/poster_broken_strings.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-    },
-    {
-        id: 8,
-        title: "Frozen Earth",
-        genre: "Dokumenter",
-        duration: "1j 40m",
-        thumbnail: "assets/poster_frozen_earth.png",
-        videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        videoUrl: `${BASE}/rolling-night/master.m3u8`
     }
 ];
 
