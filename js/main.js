@@ -1,6 +1,6 @@
 // 1. Data Video — URL dari GitHub Releases (branch: feature/releases-storage)
 // Base URL GitHub Releases
-const BASE = "https://github.com/KristianEki11/VoD-Website/releases/download/v1.0-videos";
+const BASE = "https://cdn.redlinevis.site";
 
 const videos = [
     {
