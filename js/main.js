@@ -42,6 +42,14 @@ const videos = [
         duration: "0j 08m",
         thumbnail: "assets/poster_shadow_strike.png",
         videoUrl: `${BASE}/rolling-night/master.m3u8`
+    },
+    {
+        id: 6,
+        title: "Speedramp XMAX",
+        genre: "Aksi",
+        duration: "0j 08m",
+        thumbnail: "assets/poster_frozen_earth.png",
+        videoUrl: `${BASE}/xmax/master.m3u8`
     }
 ];
 
