@@ -8,7 +8,7 @@ const videos = [
         title: "ADV Adin",
         genre: "Dokumenter",
         duration: "0j 15m",
-        thumbnail: "assets/poster_shadow_strike.png",
+        thumbnail: "assets/poster_last_frontier.png",
         videoUrl: `${BASE}/adv-adin/master.m3u8`
     },
     {
@@ -40,8 +40,16 @@ const videos = [
         title: "Rolling Night",
         genre: "Aksi",
         duration: "0j 08m",
-        thumbnail: "assets/poster_last_frontier.png",
+        thumbnail: "assets/poster_shadow_strike.png",
         videoUrl: `${BASE}/rolling-night/master.m3u8`
+    },
+    {
+        id: 6,
+        title: "Speedramp XMAX",
+        genre: "Aksi",
+        duration: "0j 08m",
+        thumbnail: "assets/poster_frozen_earth.png",
+        videoUrl: `${BASE}/speedramp-xmax/master.m3u8`
     }
 ];
 
