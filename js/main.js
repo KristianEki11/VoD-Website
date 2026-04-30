@@ -49,7 +49,7 @@ const videos = [
         genre: "Aksi",
         duration: "0j 08m",
         thumbnail: "assets/poster_frozen_earth.png",
-        videoUrl: `${BASE}/speedramp-xmax/master.m3u8`
+        videoUrl: `${BASE}/xmax/master.m3u8`
     }
 ];
 
