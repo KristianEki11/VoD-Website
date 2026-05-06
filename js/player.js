@@ -1,24 +1,56 @@
-// player.js — Logika video player (Plyr + HLS.js) + network alert
+// player.js — Plyr + HLS.js, network alert, orientasi video, mobile fullscreen
 
 let plyrInstance = null;
 let hlsInstance = null;
 let currentVideoUrl = null;
 
-// Konfigurasi Plyr
-const plyrConfig = (extraSettings = {}) => ({
-    iconUrl: 'https://cdn.plyr.io/3.7.8/plyr.svg',
-    blankVideo: 'https://cdn.plyr.io/static/blank.mp4',
-    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
-    settings: ['speed'],
-    speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
-    ...extraSettings
-});
+const isMobile = () => window.innerWidth <= 768 || /Mobi|Android/i.test(navigator.userAgent);
+
+// ── Orientasi video ────────────────────────────────────────
+function getVideoOrientation(url) {
+    const video = videos.find(v => v.videoUrl === url);
+    return video ? video.orientation : "horizontal";
+}
+
+function applyVideoOrientation(orientation) {
+    const container = document.querySelector('.video-container');
+    const modalContent = document.querySelector('.modal-content');
+    if (!container || !modalContent) return;
+
+    if (orientation === "vertical") {
+        container.classList.add('vertical');
+        modalContent.classList.add('vertical-modal');
+    } else {
+        container.classList.remove('vertical');
+        modalContent.classList.remove('vertical-modal');
+    }
+}
+
+// ── Mobile Fullscreen ──────────────────────────────────────
+function requestMobileFullscreen(videoEl) {
+    if (!isMobile()) return;
+
+    // Coba berbagai API fullscreen
+    const requestFs =
+        videoEl.requestFullscreen ||
+        videoEl.webkitRequestFullscreen ||
+        videoEl.mozRequestFullScreen ||
+        videoEl.msRequestFullscreen;
+
+    if (requestFs) {
+        requestFs.call(videoEl).catch(() => {
+            // Fallback: pakai Plyr fullscreen
+            if (plyrInstance) plyrInstance.fullscreen.enter();
+        });
+    } else if (plyrInstance) {
+        plyrInstance.fullscreen.enter();
+    }
+}
 
 // ── Network Alert ──────────────────────────────────────────
 function showNetworkAlert() {
-    // Hapus alert lama jika ada
     const existing = document.getElementById('networkAlert');
-    if (existing) existing.remove();
+    if (existing) return; // Jangan tampilkan duplikat
 
     const alert = document.createElement('div');
     alert.id = 'networkAlert';
@@ -32,27 +64,14 @@ function showNetworkAlert() {
         <button class="network-alert-close" id="closeAlertBtn">✕</button>
     `;
     document.body.appendChild(alert);
-
-    // Animasi masuk
     setTimeout(() => alert.classList.add('show'), 10);
 
-    // Tombol ganti ke Auto
     document.getElementById('switchAutoBtn').onclick = () => {
-        if (hlsInstance) {
-            hlsInstance.currentLevel = -1; // -1 = Auto ABR
-            if (plyrInstance) {
-                // Update tampilan quality di Plyr
-                plyrInstance.quality = -1;
-            }
-        }
+        if (hlsInstance) hlsInstance.currentLevel = -1;
         dismissNetworkAlert();
     };
-
-    // Tombol tutup
-    document.getElementById('closeAlertBtn').onclick = () => dismissNetworkAlert();
-
-    // Auto dismiss setelah 10 detik
-    setTimeout(() => dismissNetworkAlert(), 10000);
+    document.getElementById('closeAlertBtn').onclick = dismissNetworkAlert;
+    setTimeout(dismissNetworkAlert, 10000);
 }
 
 function dismissNetworkAlert() {
@@ -63,31 +82,26 @@ function dismissNetworkAlert() {
     }
 }
 
-// Monitor kualitas HLS — deteksi bila sering buffering di kualitas tinggi
 function monitorNetworkQuality() {
     if (!hlsInstance) return;
-
-    let bufferStallCount = 0;
+    let stallCount = 0;
+    let lastLevel = -1;
 
     hlsInstance.on(Hls.Events.ERROR, (event, data) => {
-        if (data.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR ||
-            data.details === Hls.ErrorDetails.BUFFER_SEEK_OVER_HOLE) {
-            bufferStallCount++;
-            // Tampilkan alert bila stall terjadi 2x dan bukan di mode auto
-            if (bufferStallCount >= 2 && hlsInstance.currentLevel !== -1) {
+        if (data.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR) {
+            stallCount++;
+            if (stallCount >= 2 && hlsInstance.currentLevel !== -1) {
                 showNetworkAlert();
-                bufferStallCount = 0;
+                stallCount = 0;
             }
         }
     });
 
-    // Juga monitor bila HLS.js otomatis turun kualitas karena bandwidth
-    hlsInstance.on(Hls.Events.LEVEL_SWITCHING, (event, data) => {
-        const currentLevel = hlsInstance.currentLevel;
-        if (currentLevel !== -1 && data.level < currentLevel) {
-            // HLS menurunkan kualitas sendiri — tampilkan saran ke Auto
+    hlsInstance.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
+        if (lastLevel !== -1 && data.level < lastLevel) {
             showNetworkAlert();
         }
+        lastLevel = data.level;
     });
 }
 
@@ -97,28 +111,38 @@ function openModal(url) {
     const modal = document.getElementById('videoModal');
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-
-    // Sembunyikan autoplay panel kalau masih tampil
     hideAutoplayPanel();
+    dismissNetworkAlert();
 
-    // Destroy instance sebelumnya
+    // Terapkan orientasi
+    const orientation = getVideoOrientation(url);
+    applyVideoOrientation(orientation);
+
+    // Destroy instance lama
     if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
     if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
 
     const video = document.getElementById('videoPlayer');
+
+    const plyrConfig = (extra = {}) => ({
+        iconUrl: 'https://cdn.plyr.io/3.7.8/plyr.svg',
+        blankVideo: 'https://cdn.plyr.io/static/blank.mp4',
+        controls: ['play-large','play','progress','current-time','duration','mute','volume','settings','pip','fullscreen'],
+        settings: ['speed'],
+        speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+        ...extra
+    });
 
     if (url.includes('.m3u8') && Hls.isSupported()) {
         hlsInstance = new Hls();
         hlsInstance.loadSource(url);
         hlsInstance.attachMedia(video);
 
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
             const levels = data.levels;
             const qualityOptions = [-1, ...levels.map((_, i) => i)];
             const qualityLabels = { '-1': 'Auto' };
-            levels.forEach((level, i) => {
-                qualityLabels[i] = level.height ? `${level.height}p` : `Level ${i + 1}`;
-            });
+            levels.forEach((l, i) => { qualityLabels[i] = l.height ? `${l.height}p` : `Level ${i+1}`; });
 
             plyrInstance = new Plyr(video, plyrConfig({
                 settings: ['quality', 'speed'],
@@ -131,14 +155,9 @@ function openModal(url) {
                 i18n: { qualityLabel: qualityLabels }
             }));
 
-            // Monitor network setelah player siap
             monitorNetworkQuality();
-
-            // Trigger autoplay panel saat video selesai
-            plyrInstance.on('ended', () => {
-                showAutoplayPanel(currentVideoUrl);
-            });
-
+            plyrInstance.on('ended', () => showAutoplayPanel(currentVideoUrl));
+            plyrInstance.on('ready', () => requestMobileFullscreen(video));
             plyrInstance.play();
         });
 
@@ -146,11 +165,13 @@ function openModal(url) {
         video.src = url;
         plyrInstance = new Plyr(video, plyrConfig());
         plyrInstance.on('ended', () => showAutoplayPanel(currentVideoUrl));
+        plyrInstance.on('ready', () => requestMobileFullscreen(video));
         plyrInstance.play();
     } else {
         video.src = url;
         plyrInstance = new Plyr(video, plyrConfig());
         plyrInstance.on('ended', () => showAutoplayPanel(currentVideoUrl));
+        plyrInstance.on('ready', () => requestMobileFullscreen(video));
         plyrInstance.play();
     }
 }
@@ -161,11 +182,11 @@ function closeModal() {
     document.body.style.overflow = 'auto';
     dismissNetworkAlert();
     hideAutoplayPanel();
+    applyVideoOrientation('horizontal'); // Reset orientasi
     if (plyrInstance) { plyrInstance.pause(); }
     if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
 }
 
-// Tutup modal klik di luar
 document.getElementById('videoModal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('videoModal')) closeModal();
 });
