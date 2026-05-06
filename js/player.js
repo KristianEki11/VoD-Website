@@ -15,42 +15,37 @@ function getVideoOrientation(url) {
 function applyVideoOrientation(orientation) {
     const container = document.querySelector('.video-container');
     const modalContent = document.querySelector('.modal-content');
+    const modal = document.getElementById('videoModal');
     if (!container || !modalContent) return;
 
     if (orientation === "vertical") {
         container.classList.add('vertical');
         modalContent.classList.add('vertical-modal');
+        modal.classList.add('vertical-mode');
     } else {
         container.classList.remove('vertical');
         modalContent.classList.remove('vertical-modal');
+        modal.classList.remove('vertical-mode');
     }
 }
 
-// ── Mobile Fullscreen ──────────────────────────────────────
-function requestMobileFullscreen(videoEl) {
-    if (!isMobile()) return;
+// ── Mobile Fullscreen via Plyr (bukan native video API) ────
+function requestMobileFullscreen() {
+    if (!isMobile() || !plyrInstance) return;
 
-    // Coba berbagai API fullscreen
-    const requestFs =
-        videoEl.requestFullscreen ||
-        videoEl.webkitRequestFullscreen ||
-        videoEl.mozRequestFullScreen ||
-        videoEl.msRequestFullscreen;
-
-    if (requestFs) {
-        requestFs.call(videoEl).catch(() => {
-            // Fallback: pakai Plyr fullscreen
-            if (plyrInstance) plyrInstance.fullscreen.enter();
-        });
-    } else if (plyrInstance) {
-        plyrInstance.fullscreen.enter();
-    }
+    // Tunggu Plyr benar-benar siap sebelum enter fullscreen
+    setTimeout(() => {
+        try {
+            plyrInstance.fullscreen.enter();
+        } catch(e) {
+            console.warn('Plyr fullscreen gagal:', e);
+        }
+    }, 500);
 }
 
 // ── Network Alert ──────────────────────────────────────────
 function showNetworkAlert() {
-    const existing = document.getElementById('networkAlert');
-    if (existing) return; // Jangan tampilkan duplikat
+    if (document.getElementById('networkAlert')) return;
 
     const alert = document.createElement('div');
     alert.id = 'networkAlert';
@@ -98,12 +93,26 @@ function monitorNetworkQuality() {
     });
 
     hlsInstance.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
-        if (lastLevel !== -1 && data.level < lastLevel) {
-            showNetworkAlert();
-        }
+        if (lastLevel !== -1 && data.level < lastLevel) showNetworkAlert();
         lastLevel = data.level;
     });
 }
+
+// ── Plyr config ─────────────────────────────────────────────
+const makePlyrConfig = (extra = {}) => ({
+    iconUrl: 'https://cdn.plyr.io/3.7.8/plyr.svg',
+    blankVideo: 'https://cdn.plyr.io/static/blank.mp4',
+    controls: ['play-large','play','progress','current-time','duration','mute','volume','settings','fullscreen'],
+    settings: ['speed'],
+    speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+    fullscreen: {
+        enabled: true,
+        fallback: true,   // Pakai CSS fullscreen sebagai fallback
+        iosNative: false, // Jangan pakai native iOS fullscreen
+        container: null
+    },
+    ...extra
+});
 
 // ── Modal Player ───────────────────────────────────────────
 function openModal(url) {
@@ -114,37 +123,28 @@ function openModal(url) {
     hideAutoplayPanel();
     dismissNetworkAlert();
 
-    // Terapkan orientasi
     const orientation = getVideoOrientation(url);
     applyVideoOrientation(orientation);
 
-    // Destroy instance lama
     if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
     if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
 
-    const video = document.getElementById('videoPlayer');
-
-    const plyrConfig = (extra = {}) => ({
-        iconUrl: 'https://cdn.plyr.io/3.7.8/plyr.svg',
-        blankVideo: 'https://cdn.plyr.io/static/blank.mp4',
-        controls: ['play-large','play','progress','current-time','duration','mute','volume','settings','pip','fullscreen'],
-        settings: ['speed'],
-        speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
-        ...extra
-    });
+    const videoEl = document.getElementById('videoPlayer');
 
     if (url.includes('.m3u8') && Hls.isSupported()) {
         hlsInstance = new Hls();
         hlsInstance.loadSource(url);
-        hlsInstance.attachMedia(video);
+        hlsInstance.attachMedia(videoEl);
 
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
             const levels = data.levels;
             const qualityOptions = [-1, ...levels.map((_, i) => i)];
             const qualityLabels = { '-1': 'Auto' };
-            levels.forEach((l, i) => { qualityLabels[i] = l.height ? `${l.height}p` : `Level ${i+1}`; });
+            levels.forEach((l, i) => {
+                qualityLabels[i] = l.height ? `${l.height}p` : `Level ${i+1}`;
+            });
 
-            plyrInstance = new Plyr(video, plyrConfig({
+            plyrInstance = new Plyr(videoEl, makePlyrConfig({
                 settings: ['quality', 'speed'],
                 quality: {
                     default: -1,
@@ -156,34 +156,52 @@ function openModal(url) {
             }));
 
             monitorNetworkQuality();
+
+            plyrInstance.on('ready', () => {
+                plyrInstance.play();
+                requestMobileFullscreen();
+            });
+
             plyrInstance.on('ended', () => showAutoplayPanel(currentVideoUrl));
-            plyrInstance.on('ready', () => requestMobileFullscreen(video));
-            plyrInstance.play();
         });
 
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = url;
-        plyrInstance = new Plyr(video, plyrConfig());
+    } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+        // Safari native HLS
+        videoEl.src = url;
+        plyrInstance = new Plyr(videoEl, makePlyrConfig());
+        plyrInstance.on('ready', () => {
+            plyrInstance.play();
+            requestMobileFullscreen();
+        });
         plyrInstance.on('ended', () => showAutoplayPanel(currentVideoUrl));
-        plyrInstance.on('ready', () => requestMobileFullscreen(video));
-        plyrInstance.play();
+
     } else {
-        video.src = url;
-        plyrInstance = new Plyr(video, plyrConfig());
+        // MP4 fallback
+        videoEl.src = url;
+        plyrInstance = new Plyr(videoEl, makePlyrConfig());
+        plyrInstance.on('ready', () => {
+            plyrInstance.play();
+            requestMobileFullscreen();
+        });
         plyrInstance.on('ended', () => showAutoplayPanel(currentVideoUrl));
-        plyrInstance.on('ready', () => requestMobileFullscreen(video));
-        plyrInstance.play();
     }
 }
 
 function closeModal() {
     const modal = document.getElementById('videoModal');
+
+    // Keluar dari fullscreen dulu kalau sedang fullscreen
+    if (plyrInstance && plyrInstance.fullscreen.active) {
+        plyrInstance.fullscreen.exit();
+    }
+
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
     dismissNetworkAlert();
     hideAutoplayPanel();
-    applyVideoOrientation('horizontal'); // Reset orientasi
-    if (plyrInstance) { plyrInstance.pause(); }
+    applyVideoOrientation('horizontal');
+
+    if (plyrInstance) { plyrInstance.pause(); plyrInstance.destroy(); plyrInstance = null; }
     if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
 }
 
